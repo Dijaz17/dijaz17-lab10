@@ -1,3 +1,3 @@
-public class TooSmallText {
-    
+public class TooSmallText extends Exception{
+
 }
