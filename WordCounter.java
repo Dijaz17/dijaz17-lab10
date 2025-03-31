@@ -1,5 +1,7 @@
 import java.io.*;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class WordCounter {
 
@@ -66,27 +68,22 @@ public class WordCounter {
 
     public static int processText(StringBuffer str, String stopword) throws InvalidStopwordException, TooSmallText{
         int wordcount = 0;
+        String text;
 
         if(stopword == null){
-            String[] words = str.toString().split(" ");
-            for(String word : words){
-                if (word.matches(".*[a-zA-Z0-9].*")) { 
-                    wordcount++;
-                }
-            }
+            text = str.toString();
         } else if (str.indexOf(stopword) == -1){
             throw new InvalidStopwordException(stopword);
         } else {
-            String str2 = str.substring(0, (str.indexOf(stopword) + stopword.length()));
-            String[] words = str2.split(" ");
-
-            for(String word : words){
-                if (word.matches(".*[a-zA-Z0-9].*")) { 
-                    wordcount++;
-                }
-            }
+            text = str.substring(0, (str.indexOf(stopword) + stopword.length()));
         }
 
+        Pattern regex = Pattern.compile("[a-zA-Z0-9']+");
+        Matcher regexMatcher = regex.matcher(text);
+
+        while (regexMatcher.find()) {
+            wordcount++;
+        }
 
         if(wordcount < 5){
             throw new TooSmallText(wordcount);
